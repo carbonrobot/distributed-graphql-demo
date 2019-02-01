@@ -21,12 +21,14 @@ const typeDefs = gql`
   }
   type Query {
     books: [Book]
+    book(id: Int!): Book
   }
 `;
 
 const resolvers = {
   Query: {
     books: () => books,
+    book: id => books.find(x => x.id === id),
   },
 };
 

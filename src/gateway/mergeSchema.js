@@ -1,29 +1,29 @@
 const { gql } = require('apollo-server');
 
-const rentals = [
-  {
-    userId: 1,
-    bookId: 2
-  },
-  {
-    userId: 2,
-    bookId: 1,
-  },
-];
-
-const mergeSchema = gql`
-  type Rental {
-    userId: Int!
-    bookId: Int!
-  }
-  type Query {
-    rentals: [Rental]
+const mergeSchema = `
+ extend type Rental {
+    book: Book
   }
 `;
 
 const resolvers = {
-  Query: {
-    rentals: () => rentals,
+  Rental: {
+    book: {
+      fragment: '... on Rental { bookId }',
+      resolve(rental, args, context, info) {
+        console.log(rental, args);
+        return info.mergeInfo.delegateToSchema({
+          schema: context.bookSchema,
+          operation: 'query',
+          fieldName: 'book',
+          args: {
+            id: rental.bookId,
+          },
+          context,
+          info,
+        });
+      },
+    },
   },
 };
 

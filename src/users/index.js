@@ -18,12 +18,14 @@ const typeDefs = gql`
   }
   type Query {
     users: [User]
+    user(id: Int!): User
   }
 `;
 
 const resolvers = {
   Query: {
     users: () => users,
+    user: id => users.find(x => x.id === id),
   },
 };
 

@@ -17,7 +17,9 @@ async function createServer() {
     resolvers: mergeResolvers,
   });
 
-  return new ApolloServer({ schema });
+  const context = { bookSchema, userSchema };
+
+  return new ApolloServer({ schema, context });
 }
 
 module.exports = { createServer };
